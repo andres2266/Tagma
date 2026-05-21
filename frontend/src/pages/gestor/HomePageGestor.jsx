@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import LogoutButton from '../../components/common/LogoutButton.jsx'
 import LinksHomeAdmind from '../../components/links/LinksHomeAdmind.jsx'
 import Icons from '../../utils/icons.jsx'
+import { JornadaLaboralButton } from '../../components/common/JornadaLaboralButton.jsx'
 export default function HomePageGestor() {
     const user = authStore((state) => state.empleado)
 
@@ -39,7 +40,7 @@ export default function HomePageGestor() {
                 <div className="home-grid">
 
 
-            
+
 
                     <Link to="/empleado/view" className="home-card">
                         <div className="home-card-icon"><Icons.ViewUsers /></div>
@@ -73,15 +74,18 @@ export default function HomePageGestor() {
 
                 </div>
             </div>
-            <div className="logout-section">
-                <LogoutButton />
-            </div>
-              <div className="operario-actions-footer">
-                            {user?.tipo_contrato === 'horas' &&<JornadaLaboralButton/> }
+            <div className="action-buttons-row">
+                <div className="logout-section">
+                    <LogoutButton />
                 </div>
+                <div className="operario-actions-footer">
+                    {user?.tipo_contrato === 'horas' && <JornadaLaboralButton />}
+                </div>
+            </div>
+
         </div>
 
-        
+
 
 
     );

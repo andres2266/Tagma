@@ -219,4 +219,142 @@
         text-align: center;
         padding: 1.25rem;
     }
+
+
+    /* ============================================
+   BOTÓN DE JORNADA LABORAL - ESTILOS MEJORADOS
+   ============================================ */
+
+/* Contenedor del botón en el footer */
+.operario-actions-footer {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2ecf5;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+/* Estilos para el botón de JornadaLaboralButton */
+.jornada-button {
+    background: linear-gradient(135deg, #5b8cbe, #3a6ea5);
+    border: none;
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    color: white;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 2px 8px rgba(58, 110, 165, 0.2);
+}
+
+.jornada-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(58, 110, 165, 0.3);
+    background: linear-gradient(135deg, #6a9bcb, #4a7db5);
+}
+
+.jornada-button:active {
+    transform: translateY(0);
+}
+
+/* Si el botón tiene estado activo/inactivo */
+.jornada-button.active {
+    background: linear-gradient(135deg, #2c7a4d, #1e5a3a);
+    box-shadow: 0 2px 8px rgba(44, 122, 77, 0.2);
+}
+
+.jornada-button.active:hover {
+    background: linear-gradient(135deg, #3a8a5d, #2a6a4a);
+}
+
+/* Icono dentro del botón si lo tiene */
+.jornada-button svg {
+    width: 18px;
+    height: 18px;
+    stroke: white;
+    stroke-width: 1.8;
+    fill: none;
+}
+
+/* Ajustes para el contenedor de logout y jornada */
+.logout-section {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Si quieres que logout y jornada estén en la misma línea */
+.home-container {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 80px); /* Ajusta según tu layout */
+}
+
+/* Para que el contenido empuje el footer hacia abajo */
+.home-menu {
+    flex: 1;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+    .operario-actions-footer {
+        justify-content: center;
+        margin-top: 1.5rem;
+        padding-top: 1rem;
+    }
+    
+    .jornada-button {
+        width: 100%;
+        justify-content: center;
+        padding: 0.875rem 1.5rem;
+    }
+    
+    .logout-section {
+        justify-content: center;
+    }
+    
+    /* Si quieres que logout y jornada estén uno al lado del otro en móvil */
+    .logout-section, 
+    .operario-actions-footer {
+        width: 100%;
+    }
+}
+
+/* Alternativa: si quieres que logout y jornada estén juntos */
+.action-buttons-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2ecf5;
+}
+
+.action-buttons-row .logout-section {
+    margin-top: 0;
+}
+
+.action-buttons-row .operario-actions-footer {
+    margin-top: 0;
+    border-top: none;
+    padding-top: 0;
+}
+
+@media (max-width: 768px) {
+    .action-buttons-row {
+        flex-direction: column-reverse;
+        gap: 1rem;
+    }
+    
+    .action-buttons-row .logout-section,
+    .action-buttons-row .operario-actions-footer {
+        width: 100%;
+    }
+}
 }
