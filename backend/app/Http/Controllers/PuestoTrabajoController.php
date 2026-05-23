@@ -114,36 +114,49 @@ class PuestoTrabajoController extends Controller
     }
 
     public function cambiarEstado(Request $request, PuestoTrabajo $puesto)
-    {
-        $usuario = $request->user();
+{
+    $usuario = $request->user();
 
-        if ($puesto->empresa_id !== $usuario->empresa_id) {
-            return response()->json([
-                'message' => 'Puesto de trabajo no encontrado.'
-            ], 404);
-        }
-
-        if (!in_array($usuario->rol, ['administrador'])) {
-            return response()->json([
-                'message' => 'No tienes permisos para cambiar el estado del puesto de trabajo.'
-            ], 403);
-        }
-
-        $request->validate([
-            'activo' => ['required', 'boolean'],
-        ]);
-
-
-        $puesto->activo = $request->activo;
-        $puesto->save();
-
+    if ($puesto->empresa_id !== $usuario->empresa_id) {
         return response()->json([
-            'message' => $puesto->activo
-                ? 'Puesto de trabajo activado correctamente.'
-                : 'Puesto de trabajo desactivado correctamente.',
-            'data' => $puesto,
-        ]);
+            'message' => 'Puesto de trabajo no encontrado.'
+        ], 404);
     }
+
+    $request->validate([
+        'activo' => ['required', 'boolean'],
+    ]);
+
+    $nuevoEstado = $request->boolean('activo');
+
+    if ($puesto->tareasProduccion()->exists() && $nuevoEstado === false) {
+        return response()->json([
+            'message' => 'No puedes desactivar un puesto de trabajo con tareas asignadas.'
+        ], 422);
+    }
+
+    if ($puesto->procesosFabricacion()->exists() && $nuevoEstado === false) {
+        return response()->json([
+            'message' => 'No puedes desactivar un puesto de trabajo con un proceso de fabricación asignado.'
+        ], 422);
+    }
+
+    if ($puesto->empleados()->exists() && $nuevoEstado === false) {
+        return response()->json([
+            'message' => 'No puedes desactivar un puesto de trabajo con empleados asignados.'
+        ], 422);
+    }
+
+    $puesto->activo = $nuevoEstado;
+    $puesto->save();
+
+    return response()->json([
+        'message' => $puesto->activo
+            ? 'Puesto de trabajo activado correctamente.'
+            : 'Puesto de trabajo desactivado correctamente.',
+        'data' => $puesto,
+    ]);
+}
 
     /**
      * Show the form for editing the specified resource.

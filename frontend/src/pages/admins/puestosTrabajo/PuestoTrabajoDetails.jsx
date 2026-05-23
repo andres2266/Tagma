@@ -190,7 +190,7 @@ export default function PuestoTrabajoDetails() {
                 <button
                     type="button"
                     className="btn btn-secondary"
-                    onClick={() => navigate("/puestos-trabajo")}
+                    onClick={() => navigate(-1)}
                 >
                     <Icons.ArrowRight size={12} style={{ transform: 'rotate(180deg)' }} />
                     Volver

@@ -17,45 +17,45 @@ class EmpleadoController extends Controller
      * Display a listing of the resource.
      */
     public function view(Request $request)
-    {
-        $usuario = $request->user();
+{
+    $usuario = $request->user();
 
-        if (!in_array($usuario->rol, ['administrador', 'gestor'])) {
-            return response()->json([
-                'message' => 'No tienes permisos para ver empleados.'
-            ], 403);
-        }
-
-
-        $empleados = Empleado::where('empresa_id', $usuario->empresa_id)
-            ->when($request->search, function ($query) use ($request) {
-                $query->where(function ($q) use ($request) {
-                    $q->where('nombre', 'like', "%{$request->search}%")
-                        ->orWhere('apellido', 'like', "%{$request->search}%")
-                        ->orWhere('usuario', 'like', "%{$request->search}%");
-                });
-            })
-            ->when($request->rol, function ($query) use ($request) {
-                $query->where('rol', $request->rol);
-            })
-            ->when($request->filled('activo'), function ($query) use ($request) {
-                $query->where('activo', $request->activo);
-            })
-            ->when($request->sin_puesto, function ($query) {
-                $query->whereNull('puesto_trabajo_id');
-            })
-            ->when($request->puesto_trabajo_id, function ($query) use ($request) {
-                $query->where('puesto_trabajo_id', $request->puesto_trabajo_id);
-            })
-            ->when($request->disponibles, function ($query) {
-                $query->whereDoesntHave('tareasProduccion', function ($tareaQuery) {
-                    $tareaQuery->whereIn('estado', ['asignada', 'en_progreso']);
-                });
-            })
-            ->select('id', 'nombre', 'apellido', 'puesto_trabajo_id', 'usuario', 'rol', 'activo')->paginate(10);
-
-        return response()->json($empleados, 200);
+    if (!in_array($usuario->rol, ['administrador', 'gestor'])) {
+        return response()->json([
+            'message' => 'No tienes permisos para ver empleados.'
+        ], 403);
     }
+
+    $empleados = Empleado::with('puestoTrabajo')
+        ->where('empresa_id', $usuario->empresa_id)
+        ->when($request->search, function ($query) use ($request) {
+            $query->where(function ($q) use ($request) {
+                $q->where('nombre', 'like', "%{$request->search}%")
+                    ->orWhere('apellido', 'like', "%{$request->search}%")
+                    ->orWhere('usuario', 'like', "%{$request->search}%");
+            });
+        })
+        ->when($request->rol, function ($query) use ($request) {
+            $query->where('rol', $request->rol);
+        })
+        ->when($request->filled('activo'), function ($query) use ($request) {
+            $query->where('activo', $request->boolean('activo'));
+        })
+        ->when($request->sin_puesto, function ($query) {
+            $query->whereNull('puesto_trabajo_id');
+        })
+        ->when($request->puesto_trabajo_id, function ($query) use ($request) {
+            $query->where('puesto_trabajo_id', $request->puesto_trabajo_id);
+        })
+        ->when($request->disponibles, function ($query) {
+            $query->whereDoesntHave('tareasProduccion', function ($tareaQuery) {
+                $tareaQuery->whereIn('estado', ['asignada', 'en_progreso']);
+            });
+        })
+        ->select('id','puesto_trabajo_id','nombre', 'apellido','usuario','rol','activo' )->paginate(10);
+
+    return response()->json($empleados, 200);
+}
 
     /**
      * Store a newly created resource in storage.

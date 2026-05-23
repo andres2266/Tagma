@@ -6,15 +6,11 @@ import Icons from '../../utils/icons';
 
 
 export default function ViewEmpleadosPage() {
-    const { dispatch, empleados, loading, search, rol, error, page } = useEmpleadosView();
+    const { dispatch, empleados, loading, search, rol, error, page, actualizarEstadoEmpleado, successMessage} = useEmpleadosView();
+
     const navigate = useNavigate();
 
-    const {
-        actualizarEstadoEmpleado,
-        generalError,
-        successMessage,
-        isUpdatingEstado,
-    } = useEmpleadosView();
+
 
     const handleCambiarEstado = async (empleado) => {
         const nuevoEstado = !empleado.activo;
@@ -28,12 +24,6 @@ export default function ViewEmpleadosPage() {
         if (!confirmar) return;
 
         await actualizarEstadoEmpleado(empleado.id, nuevoEstado);
-
-        dispatch({
-            type: "UPDATE_EMPLEADO_ESTADO",
-            id: empleado.id,
-            activo: nuevoEstado,
-        });
     };
 
     if (loading) {
@@ -45,11 +35,11 @@ export default function ViewEmpleadosPage() {
         );
     }
 
-    if (error) {
+    if (error && empleados.length === 0) {
         return (
             <div className="form-alert form-alert-error">
                 <Icons.Alert size={18} />
-                Error al cargar empleados.
+                {error}
             </div>
         );
     }
@@ -61,10 +51,10 @@ export default function ViewEmpleadosPage() {
                 <p>Consulta y administra los empleados del taller.</p>
             </div>
 
-            {generalError && (
+            {error && empleados.length > 0 && (
                 <div className="form-alert form-alert-error">
                     <Icons.Alert size={18} />
-                    {generalError}
+                    {error}
                 </div>
             )}
 
@@ -185,14 +175,9 @@ export default function ViewEmpleadosPage() {
                                                 <button
                                                     type="button"
                                                     className={empleado.activo ? "btn btn-danger" : "btn btn-success"}
-                                                    disabled={isUpdatingEstado}
                                                     onClick={() => handleCambiarEstado(empleado)}
                                                 >
-                                                    {isUpdatingEstado
-                                                        ? "Procesando..."
-                                                        : empleado.activo
-                                                            ? "Dar de baja"
-                                                            : "Activar"}
+                                                    {empleado.activo ? "Dar de baja" : "Activar"}
                                                 </button>
                                             </div>
                                         </td>

@@ -17,7 +17,7 @@ export function AsignarTareaProduccionPage() {
         dispatch,
         asignarTarea,
     } = useAsignarTareaProduccion(tareaId, puestoTrabajoId);
-    
+    console.log(empleados)
     return (
         <main className="page">
             <div className="page-header">
@@ -25,10 +25,6 @@ export function AsignarTareaProduccionPage() {
                     <h1>Asignar tarea</h1>
                     <p>Selecciona un operario disponible para esta tarea.</p>
                 </div>
-
-                <Link to={'/produccion/asignar-tareas/generar-ordenes'} className="btn btn-secondary">
-                    Volver
-                </Link>
             </div>
 
             {error && (
@@ -97,7 +93,7 @@ export function AsignarTareaProduccionPage() {
                                         <td>{empleado.usuario}</td>
 
                                         <td>
-                                            {empleado.puesto_trabajo?.nombre ||
+                                            {empleado.puesto_trabajo?.nombre||
                                                 "Sin puesto"}
                                         </td>
 
@@ -119,7 +115,7 @@ export function AsignarTareaProduccionPage() {
                         <button
                             type="button"
                             className="btn btn-secondary"
-                            onClick={() => navigate("/produccion/tareas")}
+                            onClick={() => navigate(-1)}
                             disabled={assigning}
                         >
                             Cancelar

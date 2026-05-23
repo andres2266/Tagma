@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Icons from "../../utils/icons";
 
 export default function PuestoTrabajoForm({
@@ -14,7 +14,7 @@ export default function PuestoTrabajoForm({
     mode = "create",
 }) {
     const isEdit = mode === "edit";
-
+    const navigate = useNavigate()
     return (
         <form className="employee-form" onSubmit={handleSubmit(onSubmit)}>
             {generalError && (
@@ -105,10 +105,14 @@ export default function PuestoTrabajoForm({
             </div>
 
             <div className="page-actions">
-                <Link className="btn btn-secondary" to={backPath}>
-                    <Icons.Close size={12} />
+                <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => navigate(-1)}
+                >
+                    <Icons.ArrowRight size={12} style={{ transform: 'rotate(180deg)' }} />
                     Volver
-                </Link>
+                </button>
 
                 <button
                     type="submit"

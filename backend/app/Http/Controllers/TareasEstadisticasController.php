@@ -26,7 +26,7 @@ class TareasEstadisticasController extends Controller
             ->count();
 
         $tareasEnProgreso = TareaProduccion::where('empresa_id', $empresaId)
-            ->where('estado', 'pendiente')
+            ->where('estado', 'asignada')
             ->count();
 
         $empleadosTrabajandoAhora = TareaProduccion::where('empresa_id', $empresaId)
@@ -39,11 +39,13 @@ class TareasEstadisticasController extends Controller
             ->where('estado', 'pendiente')
             ->count();
 
-        $unidadesPendientes = UnidadFabricacion::whereIn(
-            'orden_produccion_id',
-            OrdenProduccion::where('empresa_id', $empresaId)->pluck('id')
-        )
+        $unidadesPendientes = UnidadFabricacion::whereHas('ordenProduccion', function ($query) use ($empresaId) {
+            $query->where('empresa_id', $empresaId);
+        })
             ->where('estado', 'pendiente')
+            ->whereHas('tareasProduccion', function ($query) {
+                $query->where('estado', 'pendiente');
+            })
             ->count();
 
         $tareasCompletadasHoy = TareaProduccion::where('empresa_id', $empresaId)

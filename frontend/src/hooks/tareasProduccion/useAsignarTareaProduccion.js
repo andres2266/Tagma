@@ -116,7 +116,7 @@ export function useAsignarTareaProduccion(tareaId, puestoTrabajoId) {
             });
 
             setTimeout(() => {
-                navigate("asignar-tareas/generar-ordenes");
+                navigate(-1);
             }, 700);
         } catch (error) {
             dispatch({

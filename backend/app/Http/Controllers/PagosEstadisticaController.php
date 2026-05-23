@@ -7,8 +7,8 @@ use App\Models\PagoEmpleado;
 use Illuminate\Http\Request;
 
 class PagosEstadisticaController extends Controller
-{ 
- public function index(Request $request)
+{
+    public function index(Request $request)
     {
         $usuario = $request->user();
 
@@ -35,7 +35,7 @@ class PagosEstadisticaController extends Controller
 
         $ultimoPago = PagoEmpleado::with('empleado:id,nombre,apellido')
             ->where('empresa_id', $empresaId)
-            ->latest('fecha_pago')
+            ->latest()
             ->first();
 
         return response()->json([

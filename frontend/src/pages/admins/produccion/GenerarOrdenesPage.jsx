@@ -61,10 +61,10 @@ export function GenerarOrdenesPage() {
                     <button
                         type="button"
                         className="btn btn-primary"
-                        onClick={() => navigate("/modelos")}
+                        onClick={() => navigate("/modelos/create")}
                     >
                         <Icons.Plus size={14} />
-                        Ver modelos
+                        Crear modelo
                     </button>
                 </div>
             )}

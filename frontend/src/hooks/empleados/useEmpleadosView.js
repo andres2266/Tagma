@@ -3,7 +3,7 @@ import { useEffect, useReducer } from "react";
 import { Empleados } from '../../api/Empleados';
 
 
-const initialState = { empleados: [], loading: true, error: null, search: "", rol: "", estado: "", page: 1, };
+const initialState = { empleados: [], loading: true, error: null, search: "", rol: "", estado: "", page: 1, successMessage: null };
 
 function reducer(state, action) {
     switch (action.type) {
@@ -27,7 +27,6 @@ function reducer(state, action) {
                 loading: true,
                 error: null,
             };
-
         case "FETCH_SUCCESS":
             return {
                 ...state,
@@ -35,7 +34,23 @@ function reducer(state, action) {
                 empleados: action.payload,
             };
 
+        case "SET_SUCCESS_MESSAGE":
+            return {
+                ...state,
+                error: null,
+                successMessage: action.payload,
+            };
+
         case "FETCH_ERROR":
+            return {
+                ...state,
+                loading: false,
+                error:
+                    action.payload?.response?.data?.message ||
+                    "Error al cargar empleados.",
+            };
+
+        case "SET_GENERAL_ERROR":
             return {
                 ...state,
                 loading: false,
@@ -70,14 +85,45 @@ export function useEmpleadosView() {
                 activo: state.estado,
                 page: state.page,
             });
-
-            dispatch({ type: "FETCH_SUCCESS", payload: data.data, });
+            console.log(data)
+            dispatch({
+                type: "FETCH_SUCCESS",
+                payload: data.data,
+            });
 
         } catch (error) {
             dispatch({
                 type: "FETCH_ERROR",
                 payload: error,
             });
+        }
+    };
+
+    const actualizarEstadoEmpleado = async (id, activo) => {
+        try {
+            const response = await Empleados.updateEstado(id, activo);
+
+            dispatch({
+                type: "UPDATE_EMPLEADO_ESTADO",
+                id,
+                activo,
+            });
+
+            dispatch({
+                type: "SET_SUCCESS_MESSAGE",
+                payload: response.message || "Estado actualizado correctamente.",
+            });
+
+            return response;
+        } catch (error) {
+            dispatch({
+                type: "SET_GENERAL_ERROR",
+                payload:
+                    error.response?.data?.message ||
+                    "Ocurrió un error al cambiar el estado del empleado.",
+            });
+
+            return null;
         }
     };
 
@@ -92,6 +138,7 @@ export function useEmpleadosView() {
     return {
         ...state,
         dispatch,
+        actualizarEstadoEmpleado
     };
 
 }

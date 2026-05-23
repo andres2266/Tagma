@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useTareaActualProduccion } from "../../../hooks/tareasProduccion/useTareaActualProduccion";
-
+import Icons from "../../../utils/icons";
 export default function MiTareaActualPage() {
     const navigate = useNavigate();
 
@@ -12,6 +12,10 @@ export default function MiTareaActualPage() {
         finishing,
         terminarTarea,
     } = useTareaActualProduccion();
+    console.log(tarea)
+    const handleVerProceso = (tareaId) => {
+        navigate(`/tareas/${tareaId}/showInstrucciones/`);
+    };
 
     if (loading) {
         return (
@@ -39,6 +43,8 @@ export default function MiTareaActualPage() {
                 >
                     Volver
                 </button>
+
+
             </div>
 
             {error && (
@@ -78,16 +84,6 @@ export default function MiTareaActualPage() {
 
                         </div>
 
-                        <button
-                            type="button"
-                            className="btn btn-primary"
-                            onClick={terminarTarea}
-                            disabled={finishing}
-                        >
-                            {finishing
-                                ? "Finalizando..."
-                                : "Finalizar tarea"}
-                        </button>
 
                     </div>
 
@@ -99,10 +95,10 @@ export default function MiTareaActualPage() {
                             <label>Orden de producción</label>
 
                             <strong>
-                                {tarea.orden_produccion?.numero_unidad || "Sin orden"}
+                                {tarea.orden|| "Sin orden"}
                             </strong>
                         </div>
-                        
+
                         <div className="mi-tarea-item">
                             <label>Puesto de trabajo</label>
 
@@ -173,6 +169,15 @@ export default function MiTareaActualPage() {
                             {finishing
                                 ? "Finalizando..."
                                 : "Marcar como finalizada"}
+                        </button>
+
+                        <button
+                            className="btn btn-secondary"
+                            onClick={() => handleVerProceso(tarea.id)}
+                            title="Ver proceso de fabricación"
+                        >
+                            <Icons.Info size={12} />
+                            Ver proceso
                         </button>
 
                     </div>
