@@ -2,7 +2,7 @@ import axios from "axios";
 import { authStore } from "../stores/auth";
 
 export const api = axios.create({
-    baseURL: 'https://tapiznet-backend.onrender.com//api',
+    baseURL: 'https://tapiznet-backend.onrender.com/api',
     headers: {
         "Content-Type": "application/json",
     },
